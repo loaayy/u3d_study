@@ -3,11 +3,13 @@ using System.Collections;
 
 public class DestroyOffscreen : MonoBehaviour {
 
-	public float offset = 16f;
-
+	public float offset = 2f;
 	private bool offscreen;
 	private float offscreenX = 0;
 	private Rigidbody2D body2d;
+
+	public delegate void OnDestroy ();
+	public event OnDestroy DestroyCallBack;
 
 	void Awake(){
 		body2d = GetComponent<Rigidbody2D> ();
@@ -41,13 +43,17 @@ public class DestroyOffscreen : MonoBehaviour {
 		if (offscreen) {
 			OnOutOfBounds();
 		}
-
-
-
 	}
+
+
+
 
 	public void OnOutOfBounds(){
 		offscreen = false;
 		GameObjectUtil.Destroy (gameObject);
+
+		if (DestroyCallBack != null) {
+			DestroyCallBack ();
+		}
 	}
 }
